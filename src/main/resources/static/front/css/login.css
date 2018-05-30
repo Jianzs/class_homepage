@@ -1,0 +1,29 @@
+#loginSection {
+	margin-top: 30%;
+	
+}
+
+#loginForm {
+	opacity: 0.8;
+}
+
+header {
+	margin-top: 20%;
+}
+
+body {
+  background-image: url("../image/flat_bamboo_wallpaper.png");
+  background-size: auto;
+}
+
+@media only screen and (min-width: 768px) {
+	#loginSection {
+		margin-top: 10%;
+	}
+	header {
+		margin-top: 5%;
+	}
+	body {
+		background-size: 100%;
+	}
+}

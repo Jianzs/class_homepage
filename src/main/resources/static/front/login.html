@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>登录</title>
+  <link rel="stylesheet" href="./util/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/login.css">
+  <link rel="stylesheet" href="./util/layui/css/layui.css">
+</head>
+<body>
+  <header class="container-fluid">
+    <div class="row justify-content-md-center d-flex">
+      <div class="col-md-4">
+        <div class="page-header" id="banner">
+          <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+              <h1 class="page-lead">Class Project</h1>
+              <p class="lead">Convenience you and me</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="loginSection" class="container-fluid">
+    <div class="row justify-content-md-center d-flex">
+      <div class="col-md-4">
+        <form id="loginForm" class="shadow-lg p-3 mb-5 bg-white rounded layui-form">
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text">
+                <i class="layui-icon-username layui-icon"></i>
+              </div>
+            </div>
+            <input name="number" lay-verify="required" autocomplete="off" type="text" class="form-control" id="number" placeholder="NUMBER">
+          </div>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">
+                <i class="layui-icon-password layui-icon"></i>
+              </div>
+            </div>
+            <input name="password" lay-verify="required" type="password" class="form-control" id="password" placeholder="PASSWORD">
+          </div>
+          <button type="button" class="btn btn-success btn-lg btn-block" lay-submit lay-filter="login">登录</button>
+        </form>
+      </div>  
+    </div>    
+  </section>
+
+
+<script src="./util/bootstrap/jquery-3.3.1.min.js"></script>
+<script src="./util/bootstrap/popper.min.js"></script>
+<script src="./util/bootstrap/bootstrap.min.js"></script>
+<script src="./util/layui/layui.js"></script>
+<script src="./js/login.js"></script>
+</body>
+</html>
