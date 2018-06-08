@@ -25,6 +25,8 @@ layui.use(['element', 'flow', 'table', 'form', 'layer', 'constant'], function(){
         'rollcall': clickRollcall,
         'logout': clickLogout,
         'change-info': clickChangeInfo,
+        'form-list': clickFormList,
+        'change-pass': clickPass
     };
     const TYPE = {
         'class': 0,
@@ -41,32 +43,46 @@ layui.use(['element', 'flow', 'table', 'form', 'layer', 'constant'], function(){
         functionFactory[index](TYPE[index]);
     });
 
-    form.on('submit(change-info)', function (data) {
-        data = data.field;
+    //点击表单列表
+    function clickFormList() {
+        hideAll();
+        $("#form-board").show();
+
         $.ajax({
-            url: constant.URL_UPDATE_INFO,
-            type: 'PUT',
-            data: JSON.stringify(data),
+            url: constant.URL_FORM,
+            type: "GET",
             headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json'
+                'Authorization': token
             }
-        }).done(function (res) {
-            if (res.status === 0) {
-                layer.msg("修改成功.");
-            } else {
-                layer.msg("出错了...");
+        }).done(function(res) {
+            if (res.status !== 0) {
+                layer.msg("不好意思，出错了");
+                return ;
             }
-        }).fail(function() {
-            layer.msg("服务器开小差了...");
-        });
-        return false;
-    });
+            var forms = res.data.forms;
+            $("#form-place").empty();
+            for (var i = 0, len = forms.length; i < len; ++i) {
+                $("#form-place").append($(`<div class="layui-card form-item" id='${forms[i].formId}'>
+                    <div class="layui-card-header">
+                        <span>${forms[i].title}</span>
+                        ${forms[i].status === 0 ? '<span class="layui-badge layui-bg-orange">快去填写吧~</span>' :
+                                                    '<span class="layui-badge layui-bg-green">已完成</span>' }
+                    </div>
+                    <div class="layui-card-body">${dateFormat(forms[i].endTime)}</div>
+                </div>`));
+            }
+            $(".form-item").on("click", function () {
+                var item = $(this);
+                var formId = item.attr("id");
+                window.location.href = "/front/form.html?id="+formId;
+            })
+        })
+    }
 
     // 点击公告
     function clickNotice(type) {
         hideAll();
-        $('#notice-content').show();
+        $('#notice-board').show();
 
         $('#timeline').empty(); // 删除所有子元素
         loadFlow(type);
@@ -124,6 +140,62 @@ layui.use(['element', 'flow', 'table', 'form', 'layer', 'constant'], function(){
             });
         })
     }
+
+    form.on('submit(change-info)', function (data) {
+        data = data.field;
+        $.ajax({
+            url: constant.URL_UPDATE_INFO,
+            type: 'PUT',
+            data: JSON.stringify(data),
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json'
+            }
+        }).done(function (res) {
+            if (res.status === 0) {
+                layer.msg("修改成功.");
+            } else {
+                layer.msg("出错了...");
+            }
+        }).fail(function() {
+            layer.msg("服务器开小差了...");
+        });
+        return false;
+    });
+
+    function clickPass() {
+        hideAll();
+        $("#password-board").show();
+    }
+
+    form.on('submit(change-pass)', function (data) {
+        data = data.field;
+        if (data.newPassword !== data.renewPassword) {
+            layer.msg('新密码不匹配')
+
+        } else {
+            $.ajax({
+                url: constant.URL_CHANGE_PASSWORD,
+                type: 'PUT',
+                data: JSON.stringify(data),
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                }
+            }).done(function (res) {
+                if (res.status === 0) {
+                    layer.msg("修改成功.");
+                } else {
+                    if (res.data.code === 1) {
+                        layer.msg('就密码错误')
+                    }
+                }
+            }).fail(function() {
+                layer.msg("服务器开小差了...");
+            });
+        }
+        return false;
+    });
 
     function clickLogout() {
         localStorage.clear();
@@ -199,9 +271,11 @@ layui.use(['element', 'flow', 'table', 'form', 'layer', 'constant'], function(){
 });
 
 function hideAll() {
-    $("#notice-content").hide();
+    $("#form-board").hide();
+    $("#notice-board").hide();
     $("#rollcall-board").hide();
     $("#personal-info").hide();
+    $("#password-board").hide();
 }
 
 function dateFormat(datetime) {

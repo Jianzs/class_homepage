@@ -1,5 +1,6 @@
 package top.zhengsj.klass.service.impl;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.zhengsj.klass.dao.UserDao;
@@ -46,5 +47,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity getFrontUserInfo(Integer userId) {
         return userDao.getById(userId);
+    }
+
+    @Override
+    public OptionDto<Integer, String> changePassword(Integer userId, JSONObject jsonObject) {
+        String oldPassword = jsonObject.getString("oldPassword");
+        String newPassword = jsonObject.getString("newPassword");
+        UserEntity user = userDao.getById(userId);
+        if (BCryptUtil.check(oldPassword, user.getPassword())) {
+            user.setPassword(BCryptUtil.encode(newPassword));
+            userDao.save(user);
+            return null;
+        } else {
+            return new OptionDto<Integer, String>(1, "Old Password is Wrong.");
+        }
     }
 }

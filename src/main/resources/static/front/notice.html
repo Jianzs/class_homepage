@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>通知公告</title>
-    <link rel="stylesheet" href="./util/bootstrap/bootstrap.min.css">
+
     <link rel="stylesheet" href="./util/layui/css/layui.css">
     <style>
         * {
@@ -27,13 +27,14 @@
             <a href="javascript:;" class="unclick-mark">日常工具</a>
             <dl class="layui-nav-child">
                 <dd><a id="rollcall" href="javascript:;">点名记录</a></dd>
+                <dd><a id="form-list" href="javascript:;">填写表单</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item">
             <a href="javascript:;" class="unclick-mark">个人中心</a>
             <dl class="layui-nav-child">
                 <dd><a id="change-info" href="javascript:;">修改信息</a></dd>
-                <dd><a href="javascript:;">修改密码</a></dd>
+                <dd><a id="change-pass" href="javascript:;">修改密码</a></dd>
                 <dd><a id="logout" href="javascript:;">退了</a></dd>
             </dl>
         </li>
@@ -41,6 +42,15 @@
 </section>
 
 <section id="content">
+    <!--表单列表-->
+    <div class="layui-container" id="form-board">
+        <div class="layui-row">
+            <div class="layui-col-md-offset2 layui-col-md9" id="form-place">
+            </div>
+        </div>
+    </div>
+
+    <!--点名记录-->
     <div class="layui-container" id="rollcall-board">
         <div class="layui-row">
             <div class="layui-col-md-offset2 layui-col-md9">
@@ -49,7 +59,8 @@
         </div>
     </div>
 
-    <div class="layui-container" id="notice-content">
+    <!--通知栏-->
+    <div class="layui-container" id="notice-board">
         <div class="layui-row">
             <div class="layui-col-md-offset2 layui-col-md9">
                 <ul class="layui-timeline" id="timeline"></ul>
@@ -57,6 +68,7 @@
         </div>
     </div>
 
+    <!--修改个人信息-->
     <div class="layui-container" id="personal-info">
         <div class="layui-row">
             <div class="layui-col-md-offset2 layui-col-md9">
@@ -120,6 +132,39 @@
                     <div class="layui-form-item">
                         <div class="layui-input-block">
                             <button class="layui-btn" lay-submit lay-filter="change-info">立即提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--修改密码-->
+    <div class="layui-container" id="password-board">
+        <div class="layui-row">
+            <div class="layui-col-md-offset2 layui-col-md9">
+                <form class="layui-form" lay-filter="passForm">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">旧密码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="oldPassword" required  lay-verify="required" placeholder="OLD PASSWORD" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">新密码</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="newPassword" required  lay-verify="required" placeholder="NEW PASSWORD" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">重复新密码</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="renewPassword" required  lay-verify="required" placeholder="RENEW PASSWORD" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="change-pass">立即提交</button>
                         </div>
                     </div>
                 </form>

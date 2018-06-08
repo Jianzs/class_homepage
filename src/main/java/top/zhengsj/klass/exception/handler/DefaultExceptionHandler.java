@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import top.zhengsj.klass.exception.NoAuthorizationException;
 import top.zhengsj.klass.exception.OperateErrorException;
+import top.zhengsj.klass.exception.PostFormException;
 import top.zhengsj.klass.pojo.dto.ResponseDto;
 
 import javax.servlet.http.HttpServletResponse;
@@ -52,9 +53,14 @@ public class DefaultExceptionHandler {
                 e instanceof HttpMessageNotReadableException) {
             logger.info(sb.toString());
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            responseDto.setMessage("Something is Blank, Or Error in Your Syntax");
+            responseDto.setMessage("Something is Blank, Or JSON Error in Your Syntax");
 
-        }  else {
+        }  else if (e instanceof PostFormException) {
+            logger.error(sb.toString());
+            response.setStatus(HttpServletResponse.SC_OK);
+            responseDto.setMessage(e.getMessage());
+
+        } else {
             logger.error(sb.toString());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             responseDto.setMessage("Internet Server Error");

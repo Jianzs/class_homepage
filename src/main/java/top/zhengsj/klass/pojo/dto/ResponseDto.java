@@ -5,6 +5,7 @@ import top.zhengsj.klass.enums.ResponseStatusEnum;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class ResponseDto {
     // 返回状态码
@@ -20,7 +21,7 @@ public class ResponseDto {
     private ResponseDto(int status, String message) {
         this.status = status;
         this.message = message;
-        this.data = new HashMap<>();
+        this.data = new TreeMap<>();
     }
 
     /**

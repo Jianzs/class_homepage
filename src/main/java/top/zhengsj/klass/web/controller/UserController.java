@@ -1,5 +1,6 @@
 package top.zhengsj.klass.web.controller;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import top.zhengsj.klass.pojo.dto.OptionDto;
@@ -14,10 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/user")
 public class UserController {
     private UserService userService;
+    private HttpServletRequest request;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, HttpServletRequest request) {
         this.userService = userService;
+        this.request = request;
     }
 
     @PostMapping("/login")
@@ -36,7 +39,7 @@ public class UserController {
     }
 
     @PutMapping("")
-    public ResponseDto updateInfo(@RequestBody UserEntity user, HttpServletRequest request) {
+    public ResponseDto updateInfo(@RequestBody UserEntity user) {
         Integer userId = (Integer) request.getAttribute(JWTUtil.USER_ID_KEY);
         userService.frontUpdateInfo(userId, user);
         return ResponseDto.succeed();
@@ -47,5 +50,21 @@ public class UserController {
         Integer userId = (Integer) request.getAttribute(JWTUtil.USER_ID_KEY);
         UserEntity user = userService.getFrontUserInfo(userId);
         return ResponseDto.succeed().setData("info", user);
+    }
+
+    @PutMapping("/password")
+    public ResponseDto changePassword(@RequestBody String json) {
+        JSONObject jsonObject = new JSONObject(json);
+        if (jsonObject.isNull("oldPassword") ||
+                jsonObject.isNull("newPassword")) {
+            return ResponseDto.failed("old-password or new-password can't be null");
+        }
+        Integer userId = (Integer) request.getAttribute(JWTUtil.USER_ID_KEY);
+        OptionDto<Integer, String> res = userService.changePassword(userId, jsonObject);
+        if (res == null) {
+            return ResponseDto.succeed();
+        } else  {
+            return ResponseDto.failed(res.getOptVal()).setData("code", res.getOptKey());
+        }
     }
 }
